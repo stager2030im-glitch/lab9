@@ -32,6 +32,15 @@ Restricciones
 
 
 def buscar_codigo(codigos, objetivo, izquierda, derecha):
+    if izquierda > derecha:
+        return -1
+    medio = (izquierda + derecha) // 2
+    if codigos[medio] == objetivo:
+        return medio
+    if objetivo < codigos[medio]:
+        return buscar_codigo(codigos, objetivo, izquierda, medio - 1)
+    return buscar_codigo(codigos, objetivo, medio + 1, derecha)
+
     pass
 
 
@@ -39,25 +48,36 @@ def buscar_codigo(codigos, objetivo, izquierda, derecha):
 # Preguntas de análisis (responde debajo de cada pregunta)
 # ---------------------------------------------------------------------
 # 1. ¿Cuáles son las dos situaciones en las que termina la búsqueda?
-#
+#    a) Se encuentra el objetivo: codigos[medio] == objetivo, y se devuelve
+#       medio.
+#    b) El intervalo queda vacío: izquierda > derecha, lo que significa que
+#       el objetivo no está, y se devuelve -1.
 #
 # 2. ¿Por qué no debes incluir nuevamente la posición central en el
 #    siguiente intervalo?
-#
+#    Porque ya se comparó codigos[medio] con el objetivo y se sabe que no es
+#    el objetivo (si lo fuera, la búsqueda habría terminado). Además, si se
+#    dejara en el intervalo (por ejemplo, usando medio en lugar de medio - 1
+#    o medio + 1), el intervalo podría no reducirse nunca (como cuando queda
+#    un solo elemento) y la recursión sería infinita.
 #
 # 3. Completa la traza buscando 300 en codigos. Si una llamada no llega a
 #    calcular el medio, escribe "—".
 #
-#    Llamada | Izquierda | Derecha | Medio | Decisión
+    Llamada | Izquierda | Derecha | Medio | Decisión
 #    --------|-----------|---------|-------|---------
-#       1    |           |         |       |
-#       2    |           |         |       |
-#       3    |           |         |       |
-#       4    |           |         |       |
+#       1    |     0     |    6    |   3   | 300 < 415 -> buscar a la izquierda (derecha = 2)
+#       2    |     0     |    2    |   1   | 300 > 205 -> buscar a la derecha (izquierda = 2)
+#       3    |     2     |    2    |   2   | 300 < 310 -> buscar a la izquierda (derecha = 1)
+#       4    |     2     |    1    |   —   | izquierda > derecha -> devuelve -1
 #
 # 4. ¿Qué diferencia hay entre el progreso de esta función y el de
 #    contar_desde_limite()?
-#
+#En contar_desde_limite() cada llamada descarta un solo elemento (i
+#    aumenta en 1), así que en el peor caso hay n llamadas. En la búsqueda
+#    binaria cada llamada descarta aproximadamente la mitad de la región
+#    que queda, así que se necesitan alrededor de log2(n) llamadas. El
+#    progreso es lineal en un caso y logarítmico en el otro.
 #
 
 

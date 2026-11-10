@@ -33,11 +33,21 @@ Restricciones
 
 def contar_desde_limite(valores, limite, i=0):
     """Cuenta desde la posición i hasta el final. Se asume 0 <= i <= len(valores)."""
+    if i == len(valores):
+        return 0
+    if valores[i] >= limite:
+        return 1 + contar_desde_limite(valores, limite, i + 1)
+    return contar_desde_limite(valores, limite, i + 1)
     pass
 
 
 def contar_desde_limite_iterativo(valores, limite):
     """Cuenta en la lista completa usando un ciclo."""
+    contador = 0
+    for valor in valores:
+        if valor >= limite:
+            contador += 1
+    return contador
     pass
 
 
@@ -45,18 +55,27 @@ def contar_desde_limite_iterativo(valores, limite):
 # Preguntas de análisis (responde debajo de cada pregunta)
 # ---------------------------------------------------------------------
 # 1. ¿Qué representa el parámetro i?
-#
+#    La posición actual de la lista: indica desde dónde se cuenta. Cada
+#    llamada examina valores[i] y delega el resto (desde i + 1) a la
+#    siguiente llamada
 #
 # 2. ¿Qué cantidad disminuye a medida que aumenta i?
-#
+#    La cantidad de elementos que faltan por revisar: len(valores) - i.
+#    Cuando llega a 0 (i == len(valores)) se alcanza el caso base.
 #
 # 3. ¿Qué devuelve una llamada si el elemento actual no cumple la condición?
-#
+#    Devuelve directamente el resultado de la llamada siguiente, sin sumar
+#    nada: contar_desde_limite(valores, limite, i + 1). Ese elemento aporta 0
+#    al conteo.
 #
 # 4. ¿Qué diferencia hay entre la información pendiente de la versión
 #    recursiva y la de la iterativa?
-#
-#
+#recursiva y la de la iterativa?
+#    En la recursiva, lo pendiente es la suma "1 + ..." de cada llamada que
+#    espera el retorno de la siguiente, guardada en la pila de llamadas (una
+#    por elemento). En la iterativa, la información pendiente es solo la
+#    variable contador (y la posición del ciclo), que se actualiza en el
+#    lugar; no hay pila de llamadas, así que usa memoria constante.
 
 
 if __name__ == "__main__":
